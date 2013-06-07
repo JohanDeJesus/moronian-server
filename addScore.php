@@ -6,48 +6,37 @@ error_reporting(0);
 $name = $_GET['firstname'];
 $lastname = $_GET['lastname'];
 $val = $_GET['score'];
+$result = array();
 
 
 
-
-// conectarse a DB
+//DB info.
 $username = "hackatonDB";
 $password = "hackatonDB";
 $host = "localhost:3306";
 $dbname = "hackathon";
 
-$dbConnection = mysqli_connect($host,$username,$password,$dbname);
+if (isset($name) == true && isset($lastname) == true && isset($val) == true) { 
 
-if(mysqli_connect_errno($dbConnection) == false)
-{
-	if (isset($name) == true && isset($lastname) == true && isset($val) == true) { 
-	
-	// add to DB successfully. 
-	addHighScore($dbConnection,$name,$lastname,$val);
-	echo 1;
+	$dbConnection = mysqli_connect($host,$username,$password,$dbname);
+	if(mysqli_connect_errno($dbConnection) == false) {
+		// add to DB.
+		addHighScore($dbConnection,$name,$lastname,$val);
+		$result["Result"] = "Success";
 	}
 	else {
-	// not enough parameters
-	echo 2;
+		// Cannot connect to database. 
+		$result["Result"] = "ErrorDB";		
 	}
 
  }
 else 
 { 
-// Cannot connect to database. 
-	echo 3;
+		// Not enough parameters
+		$result["Result"] = "Error";
 }
+echo json_encode($result);
 
-
-//if(mysqli_connect_errno($dbConnection) == false && isset($name) == true && isset($lastname) == true && isset($val) == true) {
-//addHighScore($name,$lastname,$val);
-//echo "1";
-
-
-//else {
-//echo mysqli_connect_error();
-//echo 2;
-//}
 function addHighScore($dbCon,$nombre,$apellido,$valor) {
 	$sqlString = "INSERT INTO SCORE VALUES(NULL, CURDATE(), '".$nombre ."','".$apellido."',".$valor.")";
 	mysqli_query($dbCon,$sqlString);

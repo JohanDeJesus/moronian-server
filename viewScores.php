@@ -15,6 +15,7 @@ $dbConnection = mysqli_connect($host,$username,$password,$dbname);
 
 if(mysqli_connect_errno($dbConnection) == false)
 {
+	$info["Result"] = "Success";
 	$selectQuery = "SELECT * FROM SCORE";
 	$result = mysqli_query($dbConnection,$selectQuery);
 	if($result != null)
@@ -22,15 +23,15 @@ if(mysqli_connect_errno($dbConnection) == false)
 	while($i = mysqli_fetch_assoc($result)) {
 		$info[] = $i;
 	}
-	print json_encode($info);
+	//
 		
 	
 	}
 }
 else
 {
-	echo "Error";
+	$info["Result"] = "ErrorDB";
 }
-
+print json_encode($info);
 
 ?>
